@@ -17,6 +17,9 @@ public class ArrayTaskListImpl implements ArrayTaskList{
      */
     @Override
     public void add(Task task) {
+        if(task == null) {
+            throw new NullPointerException("Error. Task cannot be null");
+        }
         if(this.tasks == null){
             this.tasks = new Task[1];
             this.tasks[0] = task;
@@ -39,6 +42,9 @@ public class ArrayTaskListImpl implements ArrayTaskList{
      */
     @Override
     public boolean remove(Task task) {
+        if(task == null) {
+            throw new NullPointerException("Error. Task cannot be null");
+        }
         int indexTask = -1;
         boolean canRemove = false;
         for(int i = 0 ; i < size() ; i++){
@@ -77,7 +83,10 @@ public class ArrayTaskListImpl implements ArrayTaskList{
      */
     @Override
     public Task getTask(int index) {
-        return this.tasks == null || index >= size() || index < 0 ? null : this.tasks[index];
+        if(index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException("Error. Index is out of range");
+        }
+        return this.tasks[index];
     }
 
     /**
@@ -93,6 +102,9 @@ public class ArrayTaskListImpl implements ArrayTaskList{
      */
     @Override
     public ArrayTaskList incoming(int from, int to) {
+        if(from >= to) {
+            throw new IllegalArgumentException("Error, the initial (from) moment cannot be greater than or equal to the final moment (to).");
+        }
         ArrayTaskList incomingTask = new ArrayTaskListImpl();
         if(this.tasks != null){
             for(Task task: this.tasks){

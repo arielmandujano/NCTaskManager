@@ -30,6 +30,9 @@ public class TaskImpl implements Task{
      * @param time This parameter initializes the execution time of the task.
      */
     public TaskImpl(String title, int time) {
+        if(time < 0){
+            throw new IllegalArgumentException("Error, time cannot be negative.");
+        }
         this.title = title;
         this.time = time;
         this.active = false;
@@ -50,10 +53,12 @@ public class TaskImpl implements Task{
      * @param interval This parameter initializes the time interval necessary to repeat the execution of the task.
      */
     public TaskImpl(String title, int start, int end, int interval) {
+        if(start >= end || start < 0 || end < 0 || interval < 0){
+            throw new IllegalArgumentException("Error the starting time (start) cannot be greater than or equal to the ending time (end). Time interval must be more than 0.");
+        }
         this.title = title;
         this.start = start;
-        // This is only to avoid problems when calculating the next execution of the task.
-        this.end = end > start ? end : start + interval;
+        this.end = end;
         this.interval = interval;
         this.active = false;
         this.repeated = true;
@@ -117,6 +122,9 @@ public class TaskImpl implements Task{
      */
     @Override
     public void setTime(int time) {
+        if(time < 0) {
+            throw new IllegalArgumentException("Error, time cannot be negative.");
+        }
         if (isRepeated()) {
             this.time = time;
             this.repeated = false;
@@ -171,6 +179,9 @@ public class TaskImpl implements Task{
      */
     @Override
     public void setTime(int start, int end, int interval) {
+        if(start >= end || start < 0 || end < 0 || interval <= 0){
+            throw new IllegalArgumentException("Error the starting time (start) cannot be greater than or equal to the ending time (end). Time interval must be more than 0.");
+        }
         if(isRepeated()) {
             this.start = start;
             this.end = end;
@@ -220,6 +231,9 @@ public class TaskImpl implements Task{
      */
     @Override
     public int nextTimeAfter(int current) {
+        if (current < 0){
+            throw new IllegalArgumentException("Error. Current time cannot be negative.");
+        }
         int executionTime;
         if(!isActive()) {
             executionTime = -1;
