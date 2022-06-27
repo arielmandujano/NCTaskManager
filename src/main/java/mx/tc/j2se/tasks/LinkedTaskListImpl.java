@@ -83,9 +83,9 @@ public class LinkedTaskListImpl implements LinkedTaskList{
      * @param task the task to be added.
      */
     @Override
-    public void add(Task task) throws NullPointerException {
+    public void add(Task task) {
         if(task == null) {
-            throw new NullPointerException("Error. Task cannot be null");
+            throw new IllegalArgumentException("Error. Task cannot be null");
         }
         Node node = new Node();
         node.setTask(task);
@@ -109,9 +109,9 @@ public class LinkedTaskListImpl implements LinkedTaskList{
      * exist in the list and therefore could not be deleted.
      */
     @Override
-    public boolean remove(Task task) throws NullPointerException {
+    public boolean remove(Task task) {
         if(task == null) {
-            throw new NullPointerException("Error. Task cannot be null");
+            throw new IllegalArgumentException("Error. Task cannot be null");
         }
         boolean inTheList = false;
         for(Node node = start ; node != null ; node = node.getNext()){
@@ -148,7 +148,7 @@ public class LinkedTaskListImpl implements LinkedTaskList{
      * @return The task at the given position.
      */
     @Override
-    public Task getTask(int index) throws IndexOutOfBoundsException {
+    public Task getTask(int index){
         if(index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Error. Index is out of range");
         }

@@ -18,7 +18,7 @@ public class ArrayTaskListImpl implements ArrayTaskList{
     @Override
     public void add(Task task) {
         if(task == null) {
-            throw new NullPointerException("Error. Task cannot be null");
+            throw new IllegalArgumentException("Error. Task cannot be null");
         }
         if(this.tasks == null){
             this.tasks = new Task[1];
@@ -43,7 +43,7 @@ public class ArrayTaskListImpl implements ArrayTaskList{
     @Override
     public boolean remove(Task task) {
         if(task == null) {
-            throw new NullPointerException("Error. Task cannot be null");
+            throw new IllegalArgumentException("Error. Task cannot be null");
         }
         int indexTask = -1;
         boolean canRemove = false;
