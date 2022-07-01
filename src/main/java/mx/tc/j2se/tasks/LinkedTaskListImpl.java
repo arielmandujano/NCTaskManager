@@ -1,6 +1,6 @@
 package mx.tc.j2se.tasks;
 
-public class LinkedTaskListImpl implements LinkedTaskList{
+public class LinkedTaskListImpl extends AbstractTaskList{
 
     private Node start;
     private Node end;
@@ -159,33 +159,4 @@ public class LinkedTaskListImpl implements LinkedTaskList{
         return auxiliar.getTask();
     }
 
-    /**
-     * This function returns an LinkedTaskList object with the tasks that are
-     * scheduled and active between the time interval from "from" to "to"
-     * that are in the list that calls the function.
-     * <p>
-     *     If none of the tasks in the list are in the given interval then an empty task list is returned.
-     * </p>
-     * @param from The starting point for the search for scheduled and active tasks.
-     * @param to The ending point for the search for scheduled and active tasks.
-     * @return A new LinkedTaskList object with the tasks between from and to.
-     */
-    @Override
-    public LinkedTaskList incoming(int from, int to) throws IllegalArgumentException {
-        if(from >= to) {
-            throw new IllegalArgumentException("Error, the initial (from) moment cannot be greater than or equal to the final moment (to).");
-        }
-        LinkedTaskList incomingTask = new LinkedTaskListImpl();
-        if(this.start != null){
-            for(Node node = start ; node != null ; node = node.getNext()){
-                Task task = node.getTask();
-                if(task.isRepeated() && task.nextTimeAfter(from) < to && task.nextTimeAfter(from) != -1){
-                    incomingTask.add(task);
-                } else if(!task.isRepeated() && from < task.getTime()  && task.getTime() < to && task.isActive()){
-                    incomingTask.add(task);
-                }
-            }
-        }
-        return incomingTask;
-    }
 }

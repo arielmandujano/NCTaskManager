@@ -9,7 +9,7 @@ public class Evaluation1 {
         try {
             Circle invalidCircle = new Circle(-1);
         } catch (IllegalArgumentException exception) {
-            System.out.println(exception.getMessage());
+            System.err.println(exception.getMessage());
         }
 
         // Creating an array of circles with 3 valid circles, then using the biggestCircle function
@@ -19,14 +19,14 @@ public class Evaluation1 {
 
         int biggestCircleIndex = biggestCircle(circles);
 
-        // Printing the radius ob the biggest circle in the array.
+        // Printing the radius of the biggest circle in the array.
 
         System.out.println("The radius of the biggest circle is: " + circles[biggestCircleIndex].getRadius());
 
     }
 
     /**
-     * This method returns the index of the biggest circle on a Circle object array. If the array its
+     * This method returns the index of the biggest circle on a Circle object array. If the array is
      * empty, then returns -1.
      * @param circles An array of circle objects.
      * @return The index for the biggest circle in the array.

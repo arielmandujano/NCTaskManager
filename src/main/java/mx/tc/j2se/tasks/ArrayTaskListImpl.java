@@ -1,6 +1,6 @@
 package mx.tc.j2se.tasks;
 
-public class ArrayTaskListImpl implements ArrayTaskList{
+public class ArrayTaskListImpl extends  AbstractTaskList{
     private Task[] tasks;
 
     /**
@@ -89,32 +89,4 @@ public class ArrayTaskListImpl implements ArrayTaskList{
         return this.tasks[index];
     }
 
-    /**
-     * This function returns an ArrayTaskList object with the tasks that are
-     * scheduled and active between the time interval from "from" to "to"
-     * that are in the list that calls the function.
-     * <p>
-     *     If none of the tasks in the list are in the given interval then an empty task list is returned.
-     * </p>
-     * @param from The starting point for the search for scheduled and active tasks.
-     * @param to The ending point for the search for scheduled and active tasks.
-     * @return A new ArrayTaskList object with the tasks between from and to.
-     */
-    @Override
-    public ArrayTaskList incoming(int from, int to) {
-        if(from >= to) {
-            throw new IllegalArgumentException("Error, the initial (from) moment cannot be greater than or equal to the final moment (to).");
-        }
-        ArrayTaskList incomingTask = new ArrayTaskListImpl();
-        if(this.tasks != null){
-            for(Task task: this.tasks){
-                if(task.isRepeated() && task.nextTimeAfter(from) < to && task.nextTimeAfter(from) != -1){
-                    incomingTask.add(task);
-                } else if(!task.isRepeated() && from < task.getTime()  && task.getTime() < to && task.isActive()){
-                    incomingTask.add(task);
-                }
-            }
-        }
-        return incomingTask;
-    }
 }

@@ -32,7 +32,7 @@ class ArrayTaskListImplTest {
         for(int i = 1 ; i <= 5 ; i++){
             taskList.add(new TaskImpl("Test task " + i,i));
         }
-        boolean canRemove =  taskList.remove(taskList.getTask(10));
+        boolean canRemove =  taskList.remove(new TaskImpl("Out of array",1));
         assertFalse(canRemove);
     }
 
@@ -99,7 +99,7 @@ class ArrayTaskListImplTest {
             System.out.println("Index: " + i + ". " + taskList.getTask(i).getTitle());
         }
         System.out.println("----- Task list beyond 3 and 10 --------");
-        ArrayTaskListImpl incoming = (ArrayTaskListImpl) taskList.incoming(3,10);
+        AbstractTaskList incoming = (ArrayTaskListImpl) taskList.incoming(3,10);
         for(int i = 0 ; i < incoming.size() ; i++) {
             System.out.println("Index: " + i + ". " + incoming.getTask(i).getTitle());
         }

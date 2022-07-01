@@ -8,20 +8,20 @@ class LinkedTaskListImplTest {
 
     @Test()
     void add() {
-        LinkedTaskList list = new LinkedTaskListImpl();
+        AbstractTaskList list = new LinkedTaskListImpl();
         for(int i = 0 ; i < 10 ; i++){
             if(i%2 == 0) {
                 list.add(new TaskImpl("Test: " + i , i));
             } else  {
-                Exception exception = assertThrows(NullPointerException.class, () -> list.add(null));
-                assertEquals(NullPointerException.class, exception.getClass());
+                Exception exception = assertThrows(IllegalArgumentException.class, () -> list.add(null));
+                assertEquals(IllegalArgumentException.class, exception.getClass());
             }
         }
     }
 
     @Test
     void remove() {
-        LinkedTaskList list = new LinkedTaskListImpl();
+        AbstractTaskList list = new LinkedTaskListImpl();
         for(int i = 0 ; i < 10 ; i++){
             if(i%2 == 0) {
                 list.add(new TaskImpl("Test: " + i , i));
@@ -37,7 +37,7 @@ class LinkedTaskListImplTest {
 
     @Test
     void size() {
-        LinkedTaskList list = new LinkedTaskListImpl();
+        AbstractTaskList list = new LinkedTaskListImpl();
         for(int i = 0 ; i < 10 ; i++){
             if(i%2 == 0) {
                 list.add(new TaskImpl("Test: " + i , i));
@@ -52,7 +52,7 @@ class LinkedTaskListImplTest {
     @Test
     void getTask() {
         Task task = new TaskImpl("Test ", 1);
-        LinkedTaskList list = new LinkedTaskListImpl();
+        AbstractTaskList list = new LinkedTaskListImpl();
         list.add(task);
         assertEquals(task,list.getTask(0));
     }
