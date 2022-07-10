@@ -1,6 +1,10 @@
 package mx.tc.j2se.tasks;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 public class ArrayTaskListImpl extends  AbstractTaskList{
+
     private Task[] tasks;
 
     /**
@@ -89,4 +93,47 @@ public class ArrayTaskListImpl extends  AbstractTaskList{
         return this.tasks[index];
     }
 
+
+    /**
+     * Returns an iterator over elements of type {@code Task}.
+     *
+     * @return an Iterator.
+     */
+    @Override
+    public Iterator<Task> iterator() {
+        return new Itr();
+    }
+
+    /**
+     * This class allows us to create multiple iterators for the same list.
+     */
+    private class Itr implements Iterator<Task> {
+        int index = 0;
+
+        /**
+         * Returns {@code true} if the iteration has more elements.
+         * (In other words, returns {@code true} if {@link #next} would
+         * return an element rather than throwing an exception.)
+         *
+         * @return {@code true} if the iteration has more elements
+         */
+        @Override
+        public boolean hasNext() {
+            return index < size();
+        }
+
+        /**
+         * Returns the next element in the iteration.
+         *
+         * @return the next element in the iteration
+         * @throws NoSuchElementException if the iteration has no more elements
+         */
+        @Override
+        public Task next() {
+            if(index >= size()){
+                throw new NoSuchElementException("There is not a next element.");
+            }
+            return tasks[index++];
+        }
+    }
 }

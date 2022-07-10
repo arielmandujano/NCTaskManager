@@ -104,4 +104,43 @@ class TaskImplTest {
         repetitiveTask.setActive(true);
         assertEquals(10, repetitiveTask.nextTimeAfter(2));
     }
+
+    @Test
+    void equals() {
+        TaskImpl task1 = new TaskImpl("Test task", 10);
+        TaskImpl task2 = new TaskImpl("Test task", 10);
+        TaskImpl task3 = new TaskImpl("Test task", 10,15,1);
+        System.out.println("Same object: " + task1.equals(task1));
+        System.out.println("Same task: " + task1.equals(task2));
+        System.out.println("Different task: " + task1.equals(task3));
+    }
+
+    @Test
+    void hash() {
+        TaskImpl task1 = new TaskImpl("Test task", 10);
+        TaskImpl task2 = new TaskImpl("Test task", 10);
+        TaskImpl task3 = new TaskImpl("Test task", 10,15,1);
+        System.out.println("Task 1: " + task1.hashCode());
+        System.out.println("Task 2: " + task2.hashCode());
+        System.out.println("Task 3: " + task3.hashCode());
+    }
+
+    @Test
+    void taskToString() {
+        TaskImpl task1 = new TaskImpl("Test task 1", 10);
+        TaskImpl task2 = new TaskImpl("Test task 2", 15);
+        TaskImpl task3 = new TaskImpl("Test task 3", 10,15,1);
+        task2.setActive(true);
+        System.out.println(task1.toString());
+        System.out.println(task2.toString());
+        System.out.println(task3.toString());
+    }
+
+    @Test
+    void cloneTask() {
+        TaskImpl task1 = new TaskImpl("Test task 1", 10, 15, 2);
+        TaskImpl task2 = task1.clone();
+        System.out.println(task1.toString());
+        System.out.println(task2.toString());
+    }
 }

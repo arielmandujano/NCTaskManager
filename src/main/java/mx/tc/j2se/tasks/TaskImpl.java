@@ -1,5 +1,7 @@
 package mx.tc.j2se.tasks;
 
+import java.util.Objects;
+
 /**
  *
  */
@@ -253,5 +255,70 @@ public class TaskImpl implements Task{
             }
         }
         return executionTime;
+    }
+
+    /**
+     * Compares if the two tasks are equals.
+     * @param o The task to be compared.
+     * @return true if they are the same or have the same values, false on the contrary.
+     */
+    @Override
+    public boolean equals(Object o){
+        boolean areEquals = false;
+        Task task = (Task)o;
+        if(task == null || this.getClass() != o.getClass()){
+            areEquals = false;
+        }
+        if(this == task || (this.isActive() == task.isActive() && this.isRepeated() == task.isRepeated() && this.getStartTime() == task.getStartTime() && this.getEndTime() == task.getEndTime() && this.getRepeatInterval() == task.getRepeatInterval() && this.getTime() == task.getTime() && this.getTitle().equals(task.getTitle()))){
+            areEquals = true;
+        } else {
+            areEquals = false;
+        }
+        return areEquals;
+    }
+
+    /**
+     * Get the hash code for a task.
+     * @return The int hash code for the task.
+     */
+    @Override
+    public int hashCode(){
+        return Objects.hash(this.title,this.repeated,this.time,this.active,this.start,this.end,this.end);
+    }
+
+    /**
+     * The string representation for the task.
+     * @return A string with the information of the task.
+     */
+    @Override
+    public String toString() {
+        return this.isRepeated() ?
+                "--> Task\n" +
+                "Title: " + this.getTitle() +
+                "\nState: " + (this.isActive() ? "Active" : "Inactive") +
+                "\nType: Repetitive" +
+                "\nStart time: " + this.getStartTime() +
+                "\nEnd time: " + this.getEndTime() +
+                "\nRepeat interval: " + this.getRepeatInterval():
+                "--> Task\n" +
+                "Title: " + this.getTitle() +
+                "\nState: " + (this.isActive() ? "Active" : "Inactive") +
+                "\nType: Non-Repetitive" +
+                "\nExecution time: " + this.getTime();
+    }
+
+    /**
+     * Clones to the task that executes the method.
+     * @return A new object with the same values of the task.
+     */
+    @Override
+    public TaskImpl clone(){
+        TaskImpl newTask = null;
+        try {
+            newTask = (TaskImpl) super.clone();
+        } catch (CloneNotSupportedException e){
+            System.err.println("Error: It is not possible to create a copy of this task.");
+        }
+        return newTask;
     }
 }

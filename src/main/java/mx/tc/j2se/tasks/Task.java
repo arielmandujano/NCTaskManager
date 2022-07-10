@@ -1,6 +1,6 @@
 package mx.tc.j2se.tasks;
 
-public interface Task {
+public interface Task extends Cloneable {
 
     String getTitle();
 

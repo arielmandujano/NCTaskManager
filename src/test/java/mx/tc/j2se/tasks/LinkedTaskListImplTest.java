@@ -85,4 +85,82 @@ class LinkedTaskListImplTest {
         }
         assertEquals(7,incoming.size());
     }
+
+    @Test
+    void forEachIterated(){
+        LinkedTaskListImpl taskList = new LinkedTaskListImpl();
+        for(int i = 1 ; i <= 5 ; i++){
+            taskList.add(new TaskImpl("Test task " + i,i));
+        }
+        for(Task task: taskList) {
+            System.out.println(task.getTitle());
+        }
+    }
+    @Test
+    void forEachIteratedMultipleIterators(){
+        LinkedTaskListImpl taskList = new LinkedTaskListImpl();
+        for(int i = 1 ; i <= 5 ; i++){
+            taskList.add(new TaskImpl("Test task " + i,i));
+        }
+        for(Task task: taskList) {
+            System.out.println(task.getTitle());
+            System.out.println("~~~~~~~~~~~~~~");
+            for(Task task2: taskList){
+                System.out.println(task2.getTitle());
+            }
+            System.out.println("~~~~~~~~~~~~~~");
+        }
+    }
+
+    @Test
+    void Equals(){
+        LinkedTaskListImpl taskList = new LinkedTaskListImpl();
+        LinkedTaskListImpl taskList2 = new LinkedTaskListImpl();
+        LinkedTaskListImpl taskList3 = new LinkedTaskListImpl();
+        for(int i = 1 ; i <= 5 ; i++){
+            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList2.add(new TaskImpl("Test task " + i,i));
+            taskList3.add(new TaskImpl("Test task " + i,i));
+        }
+        taskList3.getTask(4).setActive(true);
+        System.out.println("Same list: " + taskList.equals(taskList));
+        System.out.println("List with same tasks: " + taskList.equals(taskList2));
+        System.out.println("Different lists: " + taskList.equals(taskList3));
+    }
+
+    @Test
+    void Hash() {
+        LinkedTaskListImpl taskList = new LinkedTaskListImpl();
+        LinkedTaskListImpl taskList2 = new LinkedTaskListImpl();
+        LinkedTaskListImpl taskList3 = new LinkedTaskListImpl();
+        for(int i = 1 ; i <= 5 ; i++){
+            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList2.add(new TaskImpl("Test task " + i,i));
+            taskList3.add(new TaskImpl("Test task " + i,i));
+        }
+        taskList3.getTask(4).setActive(true);
+        System.out.println("Task List 1: " + taskList.hashCode());
+        System.out.println("Task List 2: " + taskList2.hashCode());
+        System.out.println("Task List 3: " + taskList3.hashCode());
+    }
+
+    @Test
+    void listToString(){
+        LinkedTaskListImpl taskList = new LinkedTaskListImpl();
+        for(int i = 1 ; i <= 5 ; i++){
+            taskList.add(new TaskImpl("Test task " + i,i));
+        }
+        System.out.println(taskList.toString());
+    }
+
+    @Test
+    void cloneTaskList() {
+        LinkedTaskListImpl taskList = new LinkedTaskListImpl();
+        for(int i = 1 ; i <= 5 ; i++){
+            taskList.add(new TaskImpl("Test task " + i,i));
+        }
+        LinkedTaskListImpl taskList2 = (LinkedTaskListImpl) taskList.clone();
+        System.out.println("Same object: " + (taskList == taskList2));
+        System.out.println("Same tasks: " + (taskList.equals(taskList2)));
+    }
 }

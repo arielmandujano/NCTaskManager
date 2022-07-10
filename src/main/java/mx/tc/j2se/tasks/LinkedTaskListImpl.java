@@ -1,10 +1,14 @@
 package mx.tc.j2se.tasks;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 public class LinkedTaskListImpl extends AbstractTaskList{
 
     private Node start;
     private Node end;
     private int size;
+
 
     /**
      * The Node class is an Inner Non-Static Class that allows us
@@ -149,7 +153,7 @@ public class LinkedTaskListImpl extends AbstractTaskList{
      */
     @Override
     public Task getTask(int index){
-        if(index < 0 || index >= size) {
+        if(index < 0 || index >= size()) {
             throw new IndexOutOfBoundsException("Error. Index is out of range");
         }
         Node auxiliar = start;
@@ -157,6 +161,54 @@ public class LinkedTaskListImpl extends AbstractTaskList{
             auxiliar = auxiliar.getNext();
         }
         return auxiliar.getTask();
+    }
+
+    /**
+     * Returns an iterator over elements of type {@code Task}.
+     *
+     * @return an Iterator.
+     */
+    @Override
+    public Iterator<Task> iterator() {
+        return new Itr();
+    }
+
+    /**
+     * This class allows us to create multiple iterators for the same list.
+     */
+    private class Itr implements Iterator<Task> {
+        private int index = 0;
+        private Node currentNode = start;
+
+        /**
+         * Returns {@code true} if the iteration has more elements.
+         * (In other words, returns {@code true} if {@link #next} would
+         * return an element rather than throwing an exception.)
+         *
+         * @return {@code true} if the iteration has more elements
+         */
+        @Override
+        public boolean hasNext() {
+            return index < size() ;
+        }
+
+        /**
+         * Returns the next element in the iteration.
+         *
+         * @return the next element in the iteration
+         * @throws NoSuchElementException if the iteration has no more elements
+         */
+        @Override
+        public Task next() {
+            if(index >= size()){
+                throw new NoSuchElementException("There is not a next element.");
+            }
+            Task task = currentNode.getTask();
+            currentNode = currentNode.getNext();
+            index++;
+
+            return task;
+        }
     }
 
 }
