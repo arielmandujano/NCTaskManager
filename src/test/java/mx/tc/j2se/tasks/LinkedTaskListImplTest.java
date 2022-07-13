@@ -2,6 +2,9 @@ package mx.tc.j2se.tasks;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class LinkedTaskListImplTest {
@@ -162,5 +165,25 @@ class LinkedTaskListImplTest {
         LinkedTaskListImpl taskList2 = (LinkedTaskListImpl) taskList.clone();
         System.out.println("Same object: " + (taskList == taskList2));
         System.out.println("Same tasks: " + (taskList.equals(taskList2)));
+    }
+
+    @Test
+    void stream(){
+        AbstractTaskList taskList = new ArrayTaskListImpl();
+        for(int i = 1 ; i <= 5 ; i++){
+            taskList.add(new TaskImpl("Test task " + i,i));
+        }
+        for(int i = 1 ; i <= 5 ; i++){
+            taskList.add(new TaskImpl("Repetitive Test task " + i,i,i+5,1));
+        }
+        List<Task> taskList2 = taskList.getStream().filter(Task::isRepeated).collect(Collectors.toList());
+        taskList2.stream().forEach(System.out::println);
+    }
+
+    @Test
+    void streamEmptyList(){
+        AbstractTaskList taskList = new ArrayTaskListImpl();
+        Exception exception = assertThrows(RuntimeException.class, () -> taskList.getStream().filter(Task::isRepeated).collect(Collectors.toList()));
+        assertEquals(RuntimeException.class, exception.getClass());
     }
 }

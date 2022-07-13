@@ -2,6 +2,7 @@ package mx.tc.j2se.tasks;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.stream.Stream;
 
 public class ArrayTaskListImpl extends  AbstractTaskList{
 
@@ -91,6 +92,19 @@ public class ArrayTaskListImpl extends  AbstractTaskList{
             throw new IndexOutOfBoundsException("Error. Index is out of range");
         }
         return this.tasks[index];
+    }
+
+    @Override
+    public Stream<Task> getStream() throws RuntimeException {
+        if(this.size() == 0) {
+            throw new RuntimeException("Error. The list to stream cannot be empty.");
+        }
+        Stream.Builder<Task> taskStreamBuilder = Stream.builder();
+        for (Task task: this) {
+            taskStreamBuilder.add(task);
+        }
+        Stream<Task> stream = taskStreamBuilder.build();
+        return stream;
     }
 
 

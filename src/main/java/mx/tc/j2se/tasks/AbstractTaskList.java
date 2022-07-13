@@ -2,6 +2,7 @@ package mx.tc.j2se.tasks;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public abstract class AbstractTaskList implements Iterable<Task>, Cloneable {
 
@@ -29,14 +30,7 @@ public abstract class AbstractTaskList implements Iterable<Task>, Cloneable {
             throw new IllegalArgumentException("Error, the initial (from) moment cannot be greater than or equal to the final moment (to).");
         }
         AbstractTaskList incomingTask = this instanceof LinkedTaskListImpl ? TaskListFactory.createTaskList(ListTypes.types.LINKED) : TaskListFactory.createTaskList(ListTypes.types.ARRAY);
-        for(int i = 0 ; i < size() ; i++){
-            Task task = getTask(i);
-            if(task.isRepeated() && task.nextTimeAfter(from) < to && task.nextTimeAfter(from) != -1){
-                incomingTask.add(task);
-            } else if(!task.isRepeated() && from < task.getTime()  && task.getTime() < to && task.isActive()){
-                incomingTask.add(task);
-            }
-        }
+        this.getStream().filter(task -> task.nextTimeAfter(from) < to).filter(task -> task.nextTimeAfter(from) != -1).forEach(incomingTask::add);
         return incomingTask;
     }
 
@@ -110,4 +104,11 @@ public abstract class AbstractTaskList implements Iterable<Task>, Cloneable {
         }
         return newTaskList;
     }
+
+    /**
+     * Streams the list of task. If the list is empty it throws a RuntimeException.
+     * @return A stream for the task list.
+     * @throws RuntimeException
+     */
+    public abstract Stream<Task> getStream() throws RuntimeException;
 }
