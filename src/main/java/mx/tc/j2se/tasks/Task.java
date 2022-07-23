@@ -1,5 +1,7 @@
 package mx.tc.j2se.tasks;
 
+import java.time.LocalDateTime;
+
 public interface Task extends Cloneable {
 
     String getTitle();
@@ -10,20 +12,20 @@ public interface Task extends Cloneable {
 
     void setActive(boolean active);
 
-    int getTime();
+    LocalDateTime getTime();
 
-    void setTime(int time);
+    void setTime(LocalDateTime time);
 
-    int getStartTime();
+    LocalDateTime getStartTime();
 
-    int getEndTime();
+    LocalDateTime getEndTime();
 
-    int getRepeatInterval();
+    long getRepeatInterval();
 
-    void setTime(int start, int end, int interval);
+    void setTime(LocalDateTime start, LocalDateTime end, long interval);
 
     boolean isRepeated();
 
-    int nextTimeAfter(int current);
+    LocalDateTime nextTimeAfter(LocalDateTime current);
 
 }

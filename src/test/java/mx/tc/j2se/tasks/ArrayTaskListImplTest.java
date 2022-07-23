@@ -2,6 +2,7 @@ package mx.tc.j2se.tasks;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,7 +14,7 @@ class ArrayTaskListImplTest {
     void add() {
         ArrayTaskListImpl taskList = new ArrayTaskListImpl();
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i, LocalDateTime.now().plusHours(i)));
         }
         assertEquals(5,taskList.size());
     }
@@ -22,7 +23,7 @@ class ArrayTaskListImplTest {
     void remove() {
         ArrayTaskListImpl taskList = new ArrayTaskListImpl();
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i, LocalDateTime.now().plusHours((long)i)));
         }
         boolean canRemove =  taskList.remove(taskList.getTask(0));
         System.out.println(taskList.size());
@@ -33,9 +34,9 @@ class ArrayTaskListImplTest {
     void removeFailed() {
         ArrayTaskListImpl taskList = new ArrayTaskListImpl();
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i, LocalDateTime.now().plusHours((long)i)));
         }
-        boolean canRemove =  taskList.remove(new TaskImpl("Out of array",1));
+        boolean canRemove =  taskList.remove(new TaskImpl("Out of array",LocalDateTime.now()));
         assertFalse(canRemove);
     }
 
@@ -43,7 +44,7 @@ class ArrayTaskListImplTest {
     void size() {
         ArrayTaskListImpl taskList = new ArrayTaskListImpl();
         for(int i = 1 ; i <= 50 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i, LocalDateTime.now().plusHours((long)i)));
         }
         for(int i = 10 ; i <= 19 ; i++){
             taskList.remove(taskList.getTask(i));
@@ -55,7 +56,7 @@ class ArrayTaskListImplTest {
     void getTask() {
         ArrayTaskListImpl taskList = new ArrayTaskListImpl();
         for(int i = 1 ; i <= 50 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i, LocalDateTime.now().plusHours((long)i)));
         }
         assertEquals("Test task 37",taskList.getTask(36).getTitle());
     }
@@ -65,7 +66,7 @@ class ArrayTaskListImplTest {
         ArrayTaskListImpl taskList = new ArrayTaskListImpl();
         System.out.println("----- List before remove --------");
         for(int i = 1 ; i <= 15 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i, LocalDateTime.now().plusHours((long)i)));
         }
         for(int i = 0 ; i < taskList.size() ; i++) {
             System.out.println("Index: " + i + ". " + taskList.getTask(i).getTitle());
@@ -85,14 +86,14 @@ class ArrayTaskListImplTest {
         ArrayTaskListImpl taskList = new ArrayTaskListImpl();
         System.out.println("----- Task List --------");
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i, LocalDateTime.now().plusHours((long)i)));
         }
-        taskList.add(new TaskImpl("Test repetitive task 1",5,10,2));
-        taskList.add(new TaskImpl("Test repetitive task 2",1,3,1));
-        taskList.add(new TaskImpl("Test repetitive task 3",8,12,3));
-        taskList.add(new TaskImpl("Test repetitive task 4",10,20,1));
+        taskList.add(new TaskImpl("Test repetitive task 1",LocalDateTime.now().minusHours(10),LocalDateTime.now().minusHours(5),2));
+        taskList.add(new TaskImpl("Test repetitive task 2",LocalDateTime.now(),LocalDateTime.now().plusHours(5),1));
+        taskList.add(new TaskImpl("Test repetitive task 3",LocalDateTime.now().plusHours(5),LocalDateTime.now().plusHours(10),3));
+        taskList.add(new TaskImpl("Test repetitive task 4",LocalDateTime.now().plusHours(3),LocalDateTime.now().plusHours(20),1));
         for(int i = 6 ; i <= 15 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours((long)i)));
         }
         // Active tasks
         for(int i = 0 ; i < taskList.size() ; i++) {
@@ -102,18 +103,18 @@ class ArrayTaskListImplTest {
             System.out.println("Index: " + i + ". " + taskList.getTask(i).getTitle());
         }
         System.out.println("----- Task list beyond 3 and 10 --------");
-        AbstractTaskList incoming = (ArrayTaskListImpl) taskList.incoming(3,10);
+        AbstractTaskList incoming = (ArrayTaskListImpl) taskList.incoming(LocalDateTime.now(),LocalDateTime.now().plusHours(5));
         for(int i = 0 ; i < incoming.size() ; i++) {
             System.out.println("Index: " + i + ". " + incoming.getTask(i).getTitle());
         }
-        assertEquals(7,incoming.size());
+        assertEquals(8,incoming.size());
     }
 
     @Test
     void forEachIterated(){
         ArrayTaskListImpl taskList = new ArrayTaskListImpl();
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
         }
         for(Task task: taskList) {
             System.out.println(task.getTitle());
@@ -124,7 +125,7 @@ class ArrayTaskListImplTest {
     void forEachIteratedMultipleIterators(){
         ArrayTaskListImpl taskList = new ArrayTaskListImpl();
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
         }
         for(Task task: taskList) {
             System.out.println(task.getTitle());
@@ -142,9 +143,9 @@ class ArrayTaskListImplTest {
         ArrayTaskListImpl taskList2 = new ArrayTaskListImpl();
         ArrayTaskListImpl taskList3 = new ArrayTaskListImpl();
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
-            taskList2.add(new TaskImpl("Test task " + i,i));
-            taskList3.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
+            taskList2.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
+            taskList3.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
         }
         taskList3.getTask(4).setActive(true);
         System.out.println("Same list: " + taskList.equals(taskList));
@@ -158,9 +159,9 @@ class ArrayTaskListImplTest {
         ArrayTaskListImpl taskList2 = new ArrayTaskListImpl();
         ArrayTaskListImpl taskList3 = new ArrayTaskListImpl();
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
-            taskList2.add(new TaskImpl("Test task " + i,i));
-            taskList3.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
+            taskList2.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
+            taskList3.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
         }
         taskList3.getTask(4).setActive(true);
         System.out.println("Task List 1: " + taskList.hashCode());
@@ -172,7 +173,7 @@ class ArrayTaskListImplTest {
     void listToString(){
         ArrayTaskListImpl taskList = new ArrayTaskListImpl();
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
         }
         System.out.println(taskList.toString());
     }
@@ -181,7 +182,7 @@ class ArrayTaskListImplTest {
     void cloneTaskList() {
         ArrayTaskListImpl taskList = new ArrayTaskListImpl();
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
         }
         ArrayTaskListImpl taskList2 = (ArrayTaskListImpl) taskList.clone();
         System.out.println("Same object: " + (taskList == taskList2));
@@ -192,10 +193,10 @@ class ArrayTaskListImplTest {
     void stream(){
         AbstractTaskList taskList = new ArrayTaskListImpl();
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
         }
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Repetitive Test task " + i,i,i+5,1));
+            taskList.add(new TaskImpl("Repetitive Test task " + i,LocalDateTime.now().plusHours(i),LocalDateTime.now().plusHours(i+5),1));
         }
         List<Task> taskList2 = taskList.getStream().filter(Task::isRepeated).collect(Collectors.toList());
         taskList2.stream().forEach(System.out::println);

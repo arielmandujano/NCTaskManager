@@ -2,6 +2,7 @@ package mx.tc.j2se.tasks;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,7 +15,7 @@ class LinkedTaskListImplTest {
         AbstractTaskList list = new LinkedTaskListImpl();
         for(int i = 0 ; i < 10 ; i++){
             if(i%2 == 0) {
-                list.add(new TaskImpl("Test: " + i , i));
+                list.add(new TaskImpl("Test: " + i , LocalDateTime.now().plusHours(i)));
             } else  {
                 Exception exception = assertThrows(IllegalArgumentException.class, () -> list.add(null));
                 assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -27,9 +28,9 @@ class LinkedTaskListImplTest {
         AbstractTaskList list = new LinkedTaskListImpl();
         for(int i = 0 ; i < 10 ; i++){
             if(i%2 == 0) {
-                list.add(new TaskImpl("Test: " + i , i));
+                list.add(new TaskImpl("Test: " + i , LocalDateTime.now().plusHours(i)));
             } else  {
-                list.add(new TaskImpl("Test: " + i , i, i+10, 1));
+                list.add(new TaskImpl("Test: " + i , LocalDateTime.now().plusHours(i), LocalDateTime.now().plusHours(i+10), 1));
             }
         }
         list.remove(list.getTask(0));
@@ -43,9 +44,9 @@ class LinkedTaskListImplTest {
         AbstractTaskList list = new LinkedTaskListImpl();
         for(int i = 0 ; i < 10 ; i++){
             if(i%2 == 0) {
-                list.add(new TaskImpl("Test: " + i , i));
+                list.add(new TaskImpl("Test: " + i , LocalDateTime.now().plusHours(i)));
             } else  {
-                list.add(new TaskImpl("Test: " + i , i, i+10, 1));
+                list.add(new TaskImpl("Test: " + i , LocalDateTime.now().plusHours(i), LocalDateTime.now().plusHours(i+10), 1));
             }
         }
         list.remove(list.getTask(0));
@@ -54,7 +55,7 @@ class LinkedTaskListImplTest {
 
     @Test
     void getTask() {
-        Task task = new TaskImpl("Test ", 1);
+        Task task = new TaskImpl("Test ", LocalDateTime.now());
         AbstractTaskList list = new LinkedTaskListImpl();
         list.add(task);
         assertEquals(task,list.getTask(0));
@@ -65,14 +66,14 @@ class LinkedTaskListImplTest {
         LinkedTaskListImpl taskList = new LinkedTaskListImpl();
         System.out.println("----- Task List --------");
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
         }
-        taskList.add(new TaskImpl("Test repetitive task 1",5,10,2));
-        taskList.add(new TaskImpl("Test repetitive task 2",1,3,1));
-        taskList.add(new TaskImpl("Test repetitive task 3",8,12,3));
-        taskList.add(new TaskImpl("Test repetitive task 4",10,20,1));
+        taskList.add(new TaskImpl("Test repetitive task 1",LocalDateTime.now().plusHours(5),LocalDateTime.now().plusHours(10),2));
+        taskList.add(new TaskImpl("Test repetitive task 2",LocalDateTime.now().plusHours(1),LocalDateTime.now().plusHours(3),1));
+        taskList.add(new TaskImpl("Test repetitive task 3",LocalDateTime.now().plusHours(8),LocalDateTime.now().plusHours(12),3));
+        taskList.add(new TaskImpl("Test repetitive task 4",LocalDateTime.now().plusHours(10),LocalDateTime.now().plusHours(20),1));
         for(int i = 6 ; i <= 15 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
         }
         // Active tasks
         for(int i = 0 ; i < taskList.size() ; i++) {
@@ -82,7 +83,7 @@ class LinkedTaskListImplTest {
             System.out.println("Index: " + i + ". " + taskList.getTask(i).getTitle());
         }
         System.out.println("----- Task list beyond 3 and 10 --------");
-        LinkedTaskListImpl incoming = (LinkedTaskListImpl) taskList.incoming(3,10);
+        LinkedTaskListImpl incoming = (LinkedTaskListImpl) taskList.incoming(LocalDateTime.now().minusHours(5),LocalDateTime.now().plusHours(5));
         for(int i = 0 ; i < incoming.size() ; i++) {
             System.out.println("Index: " + i + ". " + incoming.getTask(i).getTitle());
         }
@@ -93,7 +94,7 @@ class LinkedTaskListImplTest {
     void forEachIterated(){
         LinkedTaskListImpl taskList = new LinkedTaskListImpl();
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
         }
         for(Task task: taskList) {
             System.out.println(task.getTitle());
@@ -103,7 +104,7 @@ class LinkedTaskListImplTest {
     void forEachIteratedMultipleIterators(){
         LinkedTaskListImpl taskList = new LinkedTaskListImpl();
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
         }
         for(Task task: taskList) {
             System.out.println(task.getTitle());
@@ -121,9 +122,9 @@ class LinkedTaskListImplTest {
         LinkedTaskListImpl taskList2 = new LinkedTaskListImpl();
         LinkedTaskListImpl taskList3 = new LinkedTaskListImpl();
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
-            taskList2.add(new TaskImpl("Test task " + i,i));
-            taskList3.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
+            taskList2.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
+            taskList3.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
         }
         taskList3.getTask(4).setActive(true);
         System.out.println("Same list: " + taskList.equals(taskList));
@@ -137,9 +138,9 @@ class LinkedTaskListImplTest {
         LinkedTaskListImpl taskList2 = new LinkedTaskListImpl();
         LinkedTaskListImpl taskList3 = new LinkedTaskListImpl();
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
-            taskList2.add(new TaskImpl("Test task " + i,i));
-            taskList3.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
+            taskList2.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
+            taskList3.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
         }
         taskList3.getTask(4).setActive(true);
         System.out.println("Task List 1: " + taskList.hashCode());
@@ -151,7 +152,7 @@ class LinkedTaskListImplTest {
     void listToString(){
         LinkedTaskListImpl taskList = new LinkedTaskListImpl();
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
         }
         System.out.println(taskList.toString());
     }
@@ -160,7 +161,7 @@ class LinkedTaskListImplTest {
     void cloneTaskList() {
         LinkedTaskListImpl taskList = new LinkedTaskListImpl();
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
         }
         LinkedTaskListImpl taskList2 = (LinkedTaskListImpl) taskList.clone();
         System.out.println("Same object: " + (taskList == taskList2));
@@ -171,10 +172,10 @@ class LinkedTaskListImplTest {
     void stream(){
         AbstractTaskList taskList = new ArrayTaskListImpl();
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Test task " + i,i));
+            taskList.add(new TaskImpl("Test task " + i,LocalDateTime.now().plusHours(i)));
         }
         for(int i = 1 ; i <= 5 ; i++){
-            taskList.add(new TaskImpl("Repetitive Test task " + i,i,i+5,1));
+            taskList.add(new TaskImpl("Repetitive Test task " + i,LocalDateTime.now().plusHours(i),LocalDateTime.now().plusHours(i+5),1));
         }
         List<Task> taskList2 = taskList.getStream().filter(Task::isRepeated).collect(Collectors.toList());
         taskList2.stream().forEach(System.out::println);

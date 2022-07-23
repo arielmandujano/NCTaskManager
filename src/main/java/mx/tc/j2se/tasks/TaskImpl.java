@@ -1,17 +1,19 @@
 package mx.tc.j2se.tasks;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
  *
  */
+
 public class TaskImpl implements Task{
 
     private String title;
-    private int time;
-    private int start;
-    private int end;
-    private int interval;
+    private LocalDateTime time;
+    private LocalDateTime start;
+    private LocalDateTime end;
+    private long interval;
     private boolean active;
     private boolean repeated;
 
@@ -31,12 +33,12 @@ public class TaskImpl implements Task{
      * @param title This parameter initializes the task title.
      * @param time This parameter initializes the execution time of the task.
      */
-    public TaskImpl(String title, int time) {
-        if(time < 0){
-            throw new IllegalArgumentException("Error, time cannot be negative.");
+    public TaskImpl(String title, LocalDateTime time) {
+        if(time == null || title == null){
+            throw new IllegalArgumentException("Error, time cannot be be null. Title cannot also be null.");
         }
         this.title = title;
-        this.time = time;
+        this.time = LocalDateTime.from(time);
         this.active = false;
         this.repeated = false;
     }
@@ -54,13 +56,13 @@ public class TaskImpl implements Task{
      * @param end This parameter initializes the time when the task will stop being executed.
      * @param interval This parameter initializes the time interval necessary to repeat the execution of the task.
      */
-    public TaskImpl(String title, int start, int end, int interval) {
-        if(start >= end || start < 0 || end < 0 || interval < 0){
-            throw new IllegalArgumentException("Error the starting time (start) cannot be greater than or equal to the ending time (end). Time interval must be more than 0.");
+    public TaskImpl(String title, LocalDateTime start, LocalDateTime end, long interval) {
+        if(start.isAfter(end) || interval < 0 || title == null){
+            throw new IllegalArgumentException("Error the starting time (start) cannot be after the ending time (end). Time interval must be more than 0. None of the parameters can be null");
         }
         this.title = title;
-        this.start = start;
-        this.end = end;
+        this.start = LocalDateTime.from(start);
+        this.end = LocalDateTime.from(end);
         this.interval = interval;
         this.active = false;
         this.repeated = true;
@@ -84,6 +86,9 @@ public class TaskImpl implements Task{
      */
     @Override
     public void setTitle(String title) {
+        if(title == null) {
+            throw new IllegalArgumentException("Title cannot be null.");
+        }
         this.title = title;
     }
 
@@ -112,7 +117,7 @@ public class TaskImpl implements Task{
      * @return the time the task will be executed.
      */
     @Override
-    public int getTime() {
+    public LocalDateTime getTime() {
         return isRepeated() ? start : time;
     }
 
@@ -123,18 +128,18 @@ public class TaskImpl implements Task{
      * @param time the new time.
      */
     @Override
-    public void setTime(int time) {
-        if(time < 0) {
-            throw new IllegalArgumentException("Error, time cannot be negative.");
+    public void setTime(LocalDateTime time) {
+        if(time == null) {
+            throw new IllegalArgumentException("Error. Time cannot be null.");
         }
         if (isRepeated()) {
-            this.time = time;
+            this.time = LocalDateTime.from(time);
             this.repeated = false;
-            this.start = 0;
-            this.end = 0;
+            this.start = null;
+            this.end = null;
             this.interval = 0;
         } else {
-            this.time = time;
+            this.time = LocalDateTime.from(time);
         }
     }
 
@@ -145,7 +150,7 @@ public class TaskImpl implements Task{
      * @return the start time of the task.
      */
     @Override
-    public int getStartTime() {
+    public LocalDateTime getStartTime() {
         return isRepeated() ? start : time;
     }
 
@@ -156,7 +161,7 @@ public class TaskImpl implements Task{
      * @return the end time of the task.
      */
     @Override
-    public int getEndTime() {
+    public LocalDateTime getEndTime() {
         return isRepeated() ? end : time;
     }
 
@@ -167,7 +172,7 @@ public class TaskImpl implements Task{
      * @return the time interval of the task.
      */
     @Override
-    public int getRepeatInterval() {
+    public long getRepeatInterval() {
         return isRepeated() ? interval : 0;
     }
 
@@ -180,19 +185,19 @@ public class TaskImpl implements Task{
      * @param interval the time interval of the task.
      */
     @Override
-    public void setTime(int start, int end, int interval) {
-        if(start >= end || start < 0 || end < 0 || interval <= 0){
-            throw new IllegalArgumentException("Error the starting time (start) cannot be greater than or equal to the ending time (end). Time interval must be more than 0.");
+    public void setTime(LocalDateTime start, LocalDateTime end, long interval) {
+        if(start.isAfter(end) || interval < 0){
+            throw new IllegalArgumentException("Error the starting time (start) cannot be after the ending time (end). Time interval must be more than 0. Start and end time cannot be null.");
         }
         if(isRepeated()) {
-            this.start = start;
-            this.end = end;
+            this.start = LocalDateTime.from(start);
+            this.end = LocalDateTime.from(end);
             this.interval = interval;
         } else {
-            this.start = start;
-            this.end = end;
+            this.start = LocalDateTime.from(start);
+            this.end = LocalDateTime.from(end);
             this.interval = interval;
-            this.time = 0;
+            this.time = null;
             this.repeated = true;
         }
     }
@@ -232,26 +237,26 @@ public class TaskImpl implements Task{
      * @return the next execution time of the task after a given time.
      */
     @Override
-    public int nextTimeAfter(int current) {
-        if (current < 0){
-            throw new IllegalArgumentException("Error. Current time cannot be negative.");
+    public LocalDateTime nextTimeAfter(LocalDateTime current) {
+        if (current == null){
+            throw new IllegalArgumentException("Error. Current time cannot be null.");
         }
-        int executionTime;
+        LocalDateTime executionTime;
         if(!isActive()) {
-            executionTime = -1;
+            executionTime = LocalDateTime.MIN;
         } else if(!isRepeated()) {
-            executionTime = current < time ? time : -1 ;
+            executionTime = current.isBefore(time) ? time : LocalDateTime.MIN ;
         } else {
-            if(current >= end)
-                executionTime = -1;
-            else if(current < start)
+            if(current.isAfter(end))
+                executionTime = LocalDateTime.MIN;
+            else if(current.isBefore(start))
                 executionTime = start;
             else {
-                int counter = start + interval;
-                while(counter <= current) {
-                    counter += interval;
+                LocalDateTime counter = start.plusHours(interval);
+                while(counter.isBefore(current) || counter.isEqual(current)) {
+                    counter = counter.plusHours(interval);
                 }
-                executionTime = counter <= end ? counter : -1;
+                executionTime = counter.isBefore(end) ? counter : LocalDateTime.MIN;
             }
         }
         return executionTime;

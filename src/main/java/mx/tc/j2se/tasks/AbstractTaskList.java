@@ -1,5 +1,6 @@
 package mx.tc.j2se.tasks;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -25,12 +26,12 @@ public abstract class AbstractTaskList implements Iterable<Task>, Cloneable {
      * @param to The ending point for the search for scheduled and active tasks.
      * @return A new AbstractTaskList object with the tasks between from and to.
      */
-    AbstractTaskList incoming(int from, int to){
-        if(to <= from) {
-            throw new IllegalArgumentException("Error, the initial (from) moment cannot be greater than or equal to the final moment (to).");
+    final AbstractTaskList incoming(LocalDateTime from, LocalDateTime to){
+        if(to.isBefore(from)) {
+            throw new IllegalArgumentException("Error, the initial (from) moment cannot be after the final moment (to).");
         }
         AbstractTaskList incomingTask = this instanceof LinkedTaskListImpl ? TaskListFactory.createTaskList(ListTypes.types.LINKED) : TaskListFactory.createTaskList(ListTypes.types.ARRAY);
-        this.getStream().filter(task -> task.nextTimeAfter(from) < to).filter(task -> task.nextTimeAfter(from) != -1).forEach(incomingTask::add);
+        this.getStream().filter(task -> task.nextTimeAfter(from).isBefore(to)).filter(task -> !task.nextTimeAfter(from).isEqual(LocalDateTime.MIN)).forEach(incomingTask::add);
         return incomingTask;
     }
 
