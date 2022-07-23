@@ -63,7 +63,6 @@ public class Tasks {
                 }
             } else {
                 for(LocalDateTime dateTime = task.nextTimeAfter(start) ; (dateTime.isBefore(end) || dateTime.isEqual(end)) && (dateTime.isBefore(task.getEndTime()) || dateTime.isEqual(task.getEndTime())) ; dateTime = dateTime.plusHours(task.getRepeatInterval())){
-                    System.out.println(dateTime + " - " + task.getTitle());
                     if(calendar.containsKey(dateTime)) {
                         calendar.get(dateTime).add(task);
                     } else {
