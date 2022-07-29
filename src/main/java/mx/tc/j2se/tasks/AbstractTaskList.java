@@ -1,11 +1,12 @@
 package mx.tc.j2se.tasks;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-public abstract class AbstractTaskList implements Iterable<Task>, Cloneable {
+public abstract class AbstractTaskList implements Iterable<Task>, Cloneable, Serializable {
 
     abstract void add(Task task);
 

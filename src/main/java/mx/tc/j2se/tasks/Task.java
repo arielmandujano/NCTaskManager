@@ -1,8 +1,9 @@
 package mx.tc.j2se.tasks;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public interface Task extends Cloneable {
+public interface Task extends Cloneable, Serializable {
 
     String getTitle();
 
